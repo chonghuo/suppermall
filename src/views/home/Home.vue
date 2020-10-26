@@ -4,19 +4,26 @@
       <div slot="center">购物街</div>
     </nav-bar>
     <home-swiper :banners="banners"></home-swiper>
+    <home-recommend :recommends="recommends"></home-recommend>
+    <home-feature></home-feature>
   </div>
 </template>
 
 <script>
     import NavBar from "@/components/common/nabbar/NavBar";
     import HomeSwiper from "@/views/home/childComps/HomeSwiper";
+    import HomeRecommend from "@/views/home/childComps/HomeRecommend";
+    import HomeFeature from "@/views/home/childComps/HomeFeature";
     import {getHomeMutidata} from "@/network/home";
+
 
     export default {
         name: "Home",
         components:{
+          HomeFeature,
           HomeSwiper,
-          NavBar
+          NavBar,
+          HomeRecommend
         },
         data(){
           return{
@@ -50,7 +57,7 @@
     background-color: var(--color-tint);
     /*设置文字颜色*/
     color:#fff;
-
+    /*固定位置--导航栏*/
     position: fixed;
     left: 0;
     right:0;
