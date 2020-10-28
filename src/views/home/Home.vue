@@ -3,16 +3,20 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <home-swiper :banners="banners"></home-swiper>
-    <home-recommend :recommends="recommends"></home-recommend>
-    <home-feature></home-feature>
-    <tab-control :titles="['流行','新款','精选',]" class="tab-control" @tabClick="tabClick"></tab-control>
-    <goods-list :goods="showGoods"></goods-list>
+    <scroll class="content" ref="scroll">
+      <home-swiper :banners="banners"></home-swiper>
+      <home-recommend :recommends="recommends"></home-recommend>
+      <home-feature></home-feature>
+      <tab-control :titles="['流行','新款','精选',]" class="tab-control" @tabClick="tabClick"></tab-control>
+      <goods-list :goods="showGoods"></goods-list>
+    </scroll>
+    <!--组件不能监听点击，必须加native-->
+    <back-top @click.native="backClick"/>
   </div>
 </template>
 
 <script>
-    import NavBar from "@/components/common/nabbar/NavBar";
+
 
     import HomeSwiper from "@/views/home/childComps/HomeSwiper";
     import HomeRecommend from "@/views/home/childComps/HomeRecommend";
@@ -20,7 +24,9 @@
 
     import TabControl from "@/components/contents/tabControl/TabControl";
     import GoodsList from "@/components/contents/goods/GoodsList";
-
+    import NavBar from "@/components/common/nabbar/NavBar";
+    import Scroll from "@/components/common/scroll/Scroll";
+    import BackTop from "@/components/contents/backTop/BackTop";
     import {getHomeMutidata,getHomeGoods} from "@/network/home";
 
 
@@ -32,7 +38,9 @@
           NavBar,
           HomeRecommend,
           TabControl,
-          GoodsList
+          GoodsList,
+          Scroll,
+          BackTop
         },
         data(){
           return{
@@ -75,13 +83,17 @@
              break;
          }
         },
+        backClick(){
+          //拿到组件对象
+          // 500毫秒返回
+          this.$refs.scroll.backTo(0,-500,500)
+        },
         // 网络请求相关方法
         getHomeMutidata(){
           getHomeMutidata().then(res=>{
             // res 是一个局部变量，需要将返回数据存在data中
             this.banners = res.data.banner.list
             this.recommends = res.data.recommend.list
-            console.log(this.banners)
           })
         },
         getHomeGoods(type){
@@ -98,8 +110,9 @@
 <style scoped>
   #home {
     /*到顶端边界的距离*/
-    padding-top: 1px;
+    padding-top: 44px;
     height: 100vh;
+    /*相对定位*/
     position: relative;
   }
 
@@ -121,6 +134,13 @@
     top: 43px;
     z-index:9;
   }
-
-
+  .content{
+     /*绝对定位*/
+     position: absolute;
+     /*overflow: hidden;*/
+     top: 44px;
+     bottom: 49px;
+     left: 0px;
+     right: 0px;
+  }
 </style>
