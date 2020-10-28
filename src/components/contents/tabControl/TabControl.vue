@@ -3,7 +3,7 @@
     <!--当仅有文字不一样的时候就不用插槽了-->
     <div v-for="(item,index) in titles" class="tab-control-item"
          :class="{active: index==currentIndex}"
-         @click="tabClick(index)">
+         @click="itemClick(index)">
       <span>{{item}}</span>
     </div>
   </div>
@@ -27,8 +27,10 @@ export default {
     }
   },
   methods:{
-    tabClick(index){
-      this.currentIndex = index
+    itemClick(index){
+      this.currentIndex = index;
+      // 组件内部发生点击事件，往父组件传
+      this.$emit("tabClick",index)
     }
   }
 }
@@ -59,4 +61,5 @@ export default {
     /*下划线*/
     border-bottom: 3px solid var(--color-high-text);
   }
+
 </style>

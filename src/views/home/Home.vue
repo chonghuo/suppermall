@@ -6,66 +6,8 @@
     <home-swiper :banners="banners"></home-swiper>
     <home-recommend :recommends="recommends"></home-recommend>
     <home-feature></home-feature>
-    <tab-control :titles="['流行','新款','精选',]" class="tab-control"></tab-control>
-    <li>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-      <ul>li</ul>
-    </li>
+    <tab-control :titles="['流行','新款','精选',]" class="tab-control" @tabClick="tabClick"></tab-control>
+    <goods-list :goods="showGoods"></goods-list>
   </div>
 </template>
 
@@ -77,6 +19,7 @@
     import HomeFeature from "@/views/home/childComps/HomeFeature";
 
     import TabControl from "@/components/contents/tabControl/TabControl";
+    import GoodsList from "@/components/contents/goods/GoodsList";
 
     import {getHomeMutidata,getHomeGoods} from "@/network/home";
 
@@ -88,7 +31,8 @@
           HomeSwiper,
           NavBar,
           HomeRecommend,
-          TabControl
+          TabControl,
+          GoodsList
         },
         data(){
           return{
@@ -98,7 +42,8 @@
                 'pop':{page:0,list:[]},
                 'new':{page:0,list:[]},
                 'sell':{page:0,list:[]}
-              }
+              },
+              currentType:'pop'
           }
         },
         /*在组件创建完毕后就发送请求*/
@@ -110,7 +55,27 @@
           this.getHomeGoods('new')
           this.getHomeGoods('sell')
         },
+      computed:{
+        showGoods(){
+          return this.goods[this.currentType].list
+        }
+      },
       methods:{
+        // 事件监听相关方法
+        tabClick(index){
+         switch (index){
+           case 0:
+             this.currentType = 'pop';
+             break;
+           case 1:
+             this.currentType = 'new';
+             break;
+           case 2:
+             this.currentType = 'sell';
+             break;
+         }
+        },
+        // 网络请求相关方法
         getHomeMutidata(){
           getHomeMutidata().then(res=>{
             // res 是一个局部变量，需要将返回数据存在data中
@@ -151,26 +116,10 @@
     z-index: 9;
 
   }
-
-  .home-tab-control{
-    /*两个要混合使用*/
-    position: sticky;
-    top: 43px;/*顶部navbar的高度*/
-    z-index: 9;
-  }
-
-  .home-scroller{
-    /*height:300px;*/
-    overflow: hidden;
-    position: absolute;
-    top: 44px;
-    bottom: 49px;
-    right: 0;
-    left: 0;
-  }
   .tab-control{
     position: sticky;
-    top:44px;
+    top: 43px;
+    z-index:9;
   }
 
 
