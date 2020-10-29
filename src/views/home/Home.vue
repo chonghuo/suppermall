@@ -3,8 +3,13 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
-    <!--通过 ref 可以拿到scroll组件对象，可以访问组件内部属性及方法-->
-    <scroll class="content" ref="scroll">
+    <!--通过 ref 可以拿到scroll组件对象，可以访问组件内部属性及方法  scroll 为自定义事件-->
+    <scroll class="content"
+            ref="scroll"
+            :probe-type="3"
+            @scroll="contentScroll"
+            :pull-up-load="true"
+            @pullingUp="loadMore">
       <home-swiper :banners="banners"></home-swiper>
       <home-recommend :recommends="recommends"></home-recommend>
       <home-feature></home-feature>
@@ -12,7 +17,7 @@
       <goods-list :goods="showGoods"></goods-list>
     </scroll>
     <!--组件不能监听点击，必须加native-->
-    <back-top @click.native="backClick"/>
+    <back-top @click.native="backClick" v-show="isShowBackTop"/>
   </div>
 </template>
 
@@ -52,7 +57,8 @@
                 'new':{page:0,list:[]},
                 'sell':{page:0,list:[]}
               },
-              currentType:'pop'
+              currentType:'pop',
+              isShowBackTop: false
           }
         },
         /*在组件创建完毕后就发送请求*/
@@ -89,6 +95,15 @@
           // 500毫秒返回
           this.$refs.scroll.backTo(0,0,500)
         },
+        // 监听滚动位置，显示topback
+        contentScroll(position){
+            this.isShowBackTop = -position.y>1000;
+
+        },
+        // 监听上拉加载更多数据
+        loadMore(){
+          this.getHomeGoods(this.currentType)
+        },
         // 网络请求相关方法
         getHomeMutidata(){
           getHomeMutidata().then(res=>{
@@ -102,6 +117,8 @@
           getHomeGoods(type,page).then(res=>{
             this.goods[type].list.push(...res.data.list)
             this.goods[type].page += 1
+            //可以使加载更多，请求多次数据
+            this.$refs.scroll.finishPullUp()
           })
         }
       }
