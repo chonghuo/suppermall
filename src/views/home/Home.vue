@@ -3,6 +3,7 @@
     <nav-bar class="home-nav">
       <div slot="center">购物街</div>
     </nav-bar>
+    <!--通过 ref 可以拿到scroll组件对象，可以访问组件内部属性及方法-->
     <scroll class="content" ref="scroll">
       <home-swiper :banners="banners"></home-swiper>
       <home-recommend :recommends="recommends"></home-recommend>
@@ -86,7 +87,7 @@
         backClick(){
           //拿到组件对象
           // 500毫秒返回
-          this.$refs.scroll.backTo(0,-500,500)
+          this.$refs.scroll.backTo(0,0,500)
         },
         // 网络请求相关方法
         getHomeMutidata(){

@@ -27,7 +27,8 @@
         },
         methods: {
             itemClick() {
-                this.$router.replace(this.path)
+              console.log('开始跳转');
+              this.$router.replace(this.path)
             }
         },
         computed: {

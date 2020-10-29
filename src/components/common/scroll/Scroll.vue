@@ -17,16 +17,16 @@ export default {
   },
   mounted() {
     this.scroll = new BScroll(this.$refs.wrapper,{
-        probeType:2
+        probeType:3,
+        click: true
     })
   },
   methods:{
     backTo(x,y,time=300){
-      console.log("log");
       console.log(x);
       console.log(y);
       console.log(time);
-      this.scroll.scrollTo(x,y,time)
+      this.scroll && this.scroll.scrollTo(x, y, time)
     }
   }
 }
